@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BoundingBoxController">
+   <top>
+      <Label text="Bounding Boxes" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="34.0" />
+         </font>
+      </Label>
+   </top>
+   <left>
+      <AnchorPane prefHeight="350.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+
+            <Button layoutX="2.0" layoutY="118.0" mnemonicParsing="false" onAction="#showPrevious" text="Poprzedni">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Button>
+
+      </AnchorPane>
+   </left>
+   <right>
+      <AnchorPane prefHeight="350.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="3.0" layoutY="118.0" mnemonicParsing="false" onAction="#showNext" prefHeight="57.0" prefWidth="154.0" text="Następny">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <Pane fx:id="imagePanel" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Canvas fx:id="image" height="353.0" layoutX="-1.0" layoutY="-1.0" width="281.0" />
+         </children>
+      </Pane>
+   </center>
+   <bottom>
+      <AnchorPane prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="192.0" layoutY="14.0" mnemonicParsing="false" onAction="#read" text="Wczytaj folder" />
+            <Button layoutX="323.0" layoutY="14.0" mnemonicParsing="false" onAction="#save" text="Zapisz modyfikacje" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>
