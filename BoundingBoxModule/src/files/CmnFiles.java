@@ -3,6 +3,7 @@ package files;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -15,7 +16,7 @@ public class CmnFiles {
     private int id;
 
     private CmnFiles(){}
-    public CmnFiles(String path){
+    public CmnFiles(String path) throws IOException{
         this.path=path;
         this.id=0;
         this.images=new ArrayList<>();
@@ -23,7 +24,7 @@ public class CmnFiles {
         loadImages(this.path);
     }
 
-    public CmnFiles(File dictionary){
+    public CmnFiles(File dictionary) throws IOException{
         this.path=dictionary.getAbsolutePath();
         this.dictionary=dictionary;
         this.id=0;
@@ -52,7 +53,12 @@ public class CmnFiles {
         return retval;
     }
 
-    private void loadImages(String path)throws NullPointerException{
+    public File getActualImage(){
+        return this.images.get(this.id);
+    }
+
+    private void loadImages(String path)throws NullPointerException, IOException{
+        CSVFiles.create(path);
         if(dictionary!=null){
             for (File fileEntry : dictionary.listFiles()) {
                 addFileToCollection(fileEntry);

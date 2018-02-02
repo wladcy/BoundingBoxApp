@@ -1,17 +1,25 @@
 package gui;
 
+import controlers.BoundingBoxToCSVControler;
+import files.CSVFiles;
 import files.CmnFiles;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.BoundingBox;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import tmp.GenerateRandomBoundingBoxes;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -44,7 +52,36 @@ public class BoundingBoxController implements Initializable {
 
     @FXML
     public void save(){
-        //TODO
+        GenerateRandomBoundingBoxes grbb = new GenerateRandomBoundingBoxes();
+        BoundingBoxToCSVControler bbtcc=new BoundingBoxToCSVControler();
+        File f = cf.getActualImage();
+        try {
+            CSVFiles.append(f, bbtcc.convert(grbb.getNewBoundingBox(f.getName())));//TODO trzeba zmienić: gdy zacznie pobierać bounding boxy z gui-> wyłączyć generator
+        }catch(IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Błąd pliku");
+            alert.setHeaderText(null);
+            alert.setContentText("Wystapił błąd przy zapisie do pliku. Proszę spróbowac ponownie później");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            String exceptionText = sw.toString();
+            Label label = new Label("Wyjatek:");
+            TextArea textArea = new TextArea(exceptionText);
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane expContent = new GridPane();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.add(label,0,0);
+            expContent.add(textArea,0,1);
+            alert.getDialogPane().setExpandableContent(expContent);
+            alert.showAndWait();
+        }
+
     }
 
     @FXML
@@ -55,8 +92,34 @@ public class BoundingBoxController implements Initializable {
         File defaultDirectory = new File("c:/");
         chooser.setInitialDirectory(defaultDirectory);
         File selectedDirectory = chooser.showDialog(new Stage());
-        cf = new CmnFiles(selectedDirectory);
-        setImage("");
+        try {
+            cf = new CmnFiles(selectedDirectory);
+            setImage("");
+        }catch (IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Błąd pliku");
+            alert.setHeaderText(null);
+            alert.setContentText("Wystapił błąd przy tworzeniu pliku CSV. Proszę spróbowac ponownie później");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            String exceptionText = sw.toString();
+            Label label = new Label("Wyjatek:");
+            TextArea textArea = new TextArea(exceptionText);
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane expContent = new GridPane();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.add(label,0,0);
+            expContent.add(textArea,0,1);
+            alert.getDialogPane().setExpandableContent(expContent);
+            alert.showAndWait();
+        }
+
     }
 
     private boolean checkImages(){
