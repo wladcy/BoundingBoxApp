@@ -52,34 +52,42 @@ public class BoundingBoxController implements Initializable {
 
     @FXML
     public void save(){
-        GenerateRandomBoundingBoxes grbb = new GenerateRandomBoundingBoxes();
-        BoundingBoxToCSVControler bbtcc=new BoundingBoxToCSVControler();
-        File f = cf.getActualImage();
-        try {
-            CSVFiles.append(f, bbtcc.convert(grbb.getNewBoundingBox(f.getName())));//TODO trzeba zmienić: gdy zacznie pobierać bounding boxy z gui-> wyłączyć generator
-        }catch(IOException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Błąd pliku");
-            alert.setHeaderText(null);
-            alert.setContentText("Wystapił błąd przy zapisie do pliku. Proszę spróbowac ponownie później");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            ex.printStackTrace(pw);
-            String exceptionText = sw.toString();
-            Label label = new Label("Wyjatek:");
-            TextArea textArea = new TextArea(exceptionText);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            GridPane.setHgrow(textArea, Priority.ALWAYS);
-            GridPane.setVgrow(textArea, Priority.ALWAYS);
-            GridPane expContent = new GridPane();
-            expContent.setMaxWidth(Double.MAX_VALUE);
-            expContent.add(label,0,0);
-            expContent.add(textArea,0,1);
-            alert.getDialogPane().setExpandableContent(expContent);
-            alert.showAndWait();
+        if(checkImages()) {
+            GenerateRandomBoundingBoxes grbb = new GenerateRandomBoundingBoxes();
+            BoundingBoxToCSVControler bbtcc = new BoundingBoxToCSVControler();
+            File f = cf.getActualImage();
+            String[] tmp = f.getAbsolutePath().split("\\\\");
+            String path = "";
+            for (int i = 0; i < tmp.length - 1; i++) {
+                path += tmp[i] + "\\\\";
+            }
+            File director = new File(path+tmp[tmp.length-2]+".CSV");
+            try {
+                CSVFiles.append(director, bbtcc.convert(grbb.getNewBoundingBox(f.getName())));//TODO trzeba zmienić: gdy zacznie pobierać bounding boxy z gui-> wyłączyć generator
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Błąd pliku");
+                alert.setHeaderText(null);
+                alert.setContentText("Wystapił błąd przy zapisie do pliku. Proszę spróbowac ponownie później");
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String exceptionText = sw.toString();
+                Label label = new Label("Wyjatek:");
+                TextArea textArea = new TextArea(exceptionText);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+                textArea.setMaxWidth(Double.MAX_VALUE);
+                textArea.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setHgrow(textArea, Priority.ALWAYS);
+                GridPane.setVgrow(textArea, Priority.ALWAYS);
+                GridPane expContent = new GridPane();
+                expContent.setMaxWidth(Double.MAX_VALUE);
+                expContent.add(label, 0, 0);
+                expContent.add(textArea, 0, 1);
+                alert.getDialogPane().setExpandableContent(expContent);
+                alert.showAndWait();
+            }
         }
 
     }
@@ -88,7 +96,7 @@ public class BoundingBoxController implements Initializable {
     public void read(){
         imagePanel.setBackground(null);
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("JavaFX Projects");
+        chooser.setTitle("Wybierz folder");
         File defaultDirectory = new File("c:/");
         chooser.setInitialDirectory(defaultDirectory);
         File selectedDirectory = chooser.showDialog(new Stage());

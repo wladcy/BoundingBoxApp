@@ -14,7 +14,7 @@ public class CSVFiles {
         }
     }
 
-    public static void append(File file, String text)throws IOException{
+    public static void append(File file, String text)throws IOException{//TODO zmiana ciała metody i jej wywołań, tak, aby zapisywała kilka bounding boxów do jednego pliku
         boolean append = true;
         boolean autoFlush = true;
         String charset = "UTF-8";
