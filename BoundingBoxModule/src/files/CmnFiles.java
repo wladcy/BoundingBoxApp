@@ -61,6 +61,7 @@ public class CmnFiles {
     private void loadImages(String path)throws NullPointerException, IOException{
         CSVFiles.create(path);
         BoundingBoxBufferControler bbbc = BoundingBoxBufferControler.getInstance();
+        bbbc.clearBuffer();
         bbbc.initializeBuffer(CSVFiles.readCSVFile(path));
         if(dictionary!=null){
             for (File fileEntry : dictionary.listFiles()) {

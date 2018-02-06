@@ -33,6 +33,10 @@ public class BoundingBoxBufferControler {
         return map.get(fileName);
     }
 
+    public void clearBuffer(){
+        map = new HashMap<>();
+    }
+
     private void addBoungingBox(BoundingBoxDataModel data){
         if(isInBuffer(data.getFileName())){
             ArrayList<BoundingBoxDataModel> list = map.get(data.getFileName());
