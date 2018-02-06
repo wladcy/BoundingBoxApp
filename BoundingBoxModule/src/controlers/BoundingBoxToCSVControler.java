@@ -2,14 +2,20 @@ package controlers;
 
 import models.BoundingBoxDataModel;
 
+import java.util.ArrayList;
+
 public class BoundingBoxToCSVControler {
-    public String convert(BoundingBoxDataModel model){
-        String retval ="";
-        retval+=model.getFileName()+";";
-        retval+=model.getMinX()+";";
-        retval+=model.getMinY()+";";
-        retval+=model.getWidth()+";";
-        retval+=model.getHeight();
+    public ArrayList<String> convert(ArrayList<BoundingBoxDataModel> bbdm){
+        ArrayList<String> retval =new ArrayList<>();
+        for(BoundingBoxDataModel model:bbdm) {
+            String text="";
+            text += model.getFileName() + ";";
+            text += model.getMinX() + ";";
+            text += model.getMinY() + ";";
+            text += model.getWidth() + ";";
+            text += model.getHeight();
+            retval.add(text);
+        }
         return retval;
     }
 }

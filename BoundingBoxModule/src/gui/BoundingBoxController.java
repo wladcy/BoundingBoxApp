@@ -1,5 +1,6 @@
 package gui;
 
+import controlers.BoundingBoxBufferControler;
 import controlers.BoundingBoxToCSVControler;
 import files.CSVFiles;
 import files.CmnFiles;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import models.BoundingBoxDataModel;
 import tmp.GenerateRandomBoundingBoxes;
 
 import java.io.File;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class BoundingBoxController implements Initializable {
@@ -62,8 +65,12 @@ public class BoundingBoxController implements Initializable {
                 path += tmp[i] + "\\\\";
             }
             File director = new File(path+tmp[tmp.length-2]+".CSV");
+            ArrayList<BoundingBoxDataModel> bbdm = new ArrayList<>();
+            bbdm.add(grbb.getNewBoundingBox(f.getPath()));//TODO trzeba zmienić: gdy zacznie pobierać bounding boxy z gui-> wyłączyć generator
+            BoundingBoxBufferControler bbbc = BoundingBoxBufferControler.getInstance();
+            bbbc.initializeBuffer(bbdm);
             try {
-                CSVFiles.append(director, bbtcc.convert(grbb.getNewBoundingBox(f.getName())));//TODO trzeba zmienić: gdy zacznie pobierać bounding boxy z gui-> wyłączyć generator
+                CSVFiles.append(director, bbtcc.convert(bbdm));
             } catch (IOException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Błąd pliku");
@@ -144,11 +151,24 @@ public class BoundingBoxController implements Initializable {
     }
 
     private void setImage(String sign){
-        Image i = new Image(cf.getNextFile(sign).toURI().toString());
+        File f = cf.getNextFile(sign);
+        Image i = new Image(f.toURI().toString());
         BackgroundSize bs = new BackgroundSize(BackgroundSize.AUTO,BackgroundSize.AUTO,true,true,true,false);
         BackgroundImage bi = new BackgroundImage(i, BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, bs);
         Background b = new Background(bi);
         imagePanel.setBackground(b);
+        BoundingBoxBufferControler bbbc=BoundingBoxBufferControler.getInstance();
+        if(bbbc.isInBuffer(f.getPath())){
+            ArrayList<BoundingBoxDataModel> list = bbbc.getBoundingBoxes(f.getPath());
+            for(BoundingBoxDataModel bbdm : list){
+                //TODO teraz sie drukuje na standardowe wyjście, tutaj ma się wczytywac boundingbox na gui
+                System.out.println("File name: "+bbdm.getFileName());
+                System.out.println("MinX: "+bbdm.getMinX());
+                System.out.println("MinY: "+bbdm.getMinY());
+                System.out.println("Width: "+bbdm.getWidth());
+                System.out.println("Height: "+bbdm.getHeight());
+            }
+        }
     }
 }

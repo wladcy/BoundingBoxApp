@@ -1,5 +1,6 @@
 package files;
 
+import controlers.BoundingBoxBufferControler;
 import javafx.scene.image.Image;
 
 import java.io.File;
@@ -59,6 +60,8 @@ public class CmnFiles {
 
     private void loadImages(String path)throws NullPointerException, IOException{
         CSVFiles.create(path);
+        BoundingBoxBufferControler bbbc = BoundingBoxBufferControler.getInstance();
+        bbbc.initializeBuffer(CSVFiles.readCSVFile(path));
         if(dictionary!=null){
             for (File fileEntry : dictionary.listFiles()) {
                 addFileToCollection(fileEntry);
